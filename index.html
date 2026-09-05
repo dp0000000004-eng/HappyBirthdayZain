@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A surprise</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,500;0,9..144,700;1,9..144,480&family=Outfit:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="grain" aria-hidden="true"></div>
+
+    <section id="intro" class="scene scene--intro">
+      <p class="whisper">psst. this is only for you.</p>
+      <button class="gift" type="button" aria-label="Open the surprise">
+        <span class="gift__lid"></span>
+        <span class="gift__box"></span>
+        <span class="gift__bow"></span>
+      </button>
+      <p class="whisper whisper--soft">tap to surprise</p>
+    </section>
+
+    <section id="house" class="scene scene--house hidden" hidden>
+      <header class="house__header">
+        <p class="eyebrow">welcome to</p>
+        <h1 id="house-title">her birthday house</h1>
+        <p class="lede">pick a room. the cake waits until the end.</p>
+      </header>
+      <nav class="rooms" aria-label="Rooms">
+        <button data-room="messages" type="button">
+          <span>01</span>
+          <strong>love notes</strong>
+          <em>texts arriving now</em>
+        </button>
+        <button data-room="fame" type="button">
+          <span>02</span>
+          <strong>hall of fame</strong>
+          <em>her official titles</em>
+        </button>
+        <button data-room="gallery" type="button">
+          <span>03</span>
+          <strong>memory wall</strong>
+          <em>photos & little films</em>
+        </button>
+        <button data-room="cake" type="button" class="rooms__finale">
+          <span>04</span>
+          <strong>the cake</strong>
+          <em>wish · blow · cut</em>
+        </button>
+        <button id="night-room" data-room="sky" type="button" class="rooms__night hidden" hidden>
+          <span>05</span>
+          <strong>the night</strong>
+          <em>where the day goes to sleep</em>
+        </button>
+      </nav>
+    </section>
+
+    <section id="messages" class="scene scene--room hidden" hidden>
+      <button class="back" data-back type="button">house</button>
+      <div class="phone">
+        <div class="phone__bar">
+          <span>The people who love you</span>
+          <small>today</small>
+        </div>
+        <div id="thread" class="thread" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <section id="fame" class="scene scene--room hidden" hidden>
+      <button class="back" data-back type="button">house</button>
+      <p class="eyebrow">museum of her</p>
+      <h2 class="room-title">Hall of fame</h2>
+      <div id="frames" class="frames"></div>
+    </section>
+
+    <section id="gallery" class="scene scene--room hidden" hidden>
+      <button class="back" data-back type="button">house</button>
+      <p class="eyebrow">keep this between us</p>
+      <h2 class="room-title">Memory wall</h2>
+      <p class="lede">Drop her real photos here. They stay on this computer.</p>
+      <label class="drop">
+        <input id="photo-input" type="file" accept="image/*" multiple />
+        tuck photos into the album
+      </label>
+      <div id="wall" class="wall"></div>
+    </section>
+
+    <section id="cake" class="scene scene--cake hidden" hidden>
+      <button class="back back--light" data-back type="button">house</button>
+      <p id="cake-line" class="cake-line">close your eyes. make a wish.</p>
+      <div id="stage" class="stage">
+        <div class="table"></div>
+        <div id="cake-body" class="cake">
+          <div class="cake__plate"></div>
+          <div class="cake__half cake__half--left">
+            <div class="layer layer--3"></div>
+            <div class="layer layer--2"></div>
+            <div class="layer layer--1"></div>
+            <div class="icing"></div>
+          </div>
+          <div class="cake__half cake__half--right">
+            <div class="layer layer--3"></div>
+            <div class="layer layer--2"></div>
+            <div class="layer layer--1"></div>
+            <div class="icing"></div>
+          </div>
+          <div class="slice">
+            <div class="layer layer--3"></div>
+            <div class="layer layer--2"></div>
+            <div class="layer layer--1"></div>
+          </div>
+          <div id="candles" class="candles"></div>
+        </div>
+        <div id="knife" class="knife" aria-hidden="true"></div>
+        <div id="cut-line" class="cut-line"></div>
+        <div id="pieces" class="pieces" hidden></div>
+        <div id="plates" class="plates" hidden></div>
+      </div>
+      <div class="cake-actions">
+        <button id="blow-btn" type="button">blow candles</button>
+        <button id="mic-btn" type="button">use her breath</button>
+        <button id="night-btn" type="button" hidden>take the night</button>
+      </div>
+      <p id="finale" class="finale" hidden></p>
+    </section>
+
+    <section id="sky" class="scene scene--sky hidden" hidden>
+      <p id="sky-line" class="whisper">the night came to collect the party</p>
+      <button id="release" type="button">send the lanterns</button>
+      <div id="lanterns" class="lanterns" aria-hidden="true"></div>
+      <canvas id="constellation" class="constellation" aria-hidden="true"></canvas>
+      <p id="sky-keep" class="sky-keep" hidden>the sky will keep this year for you</p>
+      <button id="tuck" type="button" hidden>tuck the day away</button>
+    </section>
+
+    <dialog id="lightbox" class="lightbox">
+      <img alt="" />
+      <form method="dialog"><button>close</button></form>
+    </dialog>
+
+    <canvas id="sparkle" class="sparkle" aria-hidden="true"></canvas>
+    <script src="party.js"></script>
+    <script src="app.js"></script>
+  </body>
+</html>
