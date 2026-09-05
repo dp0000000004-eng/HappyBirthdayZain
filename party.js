@@ -1,6 +1,6 @@
 window.PARTY = {
-  name: "Zara",
-  age: 6,
+  name: "Zain",
+  age: 1,
   messages: [
     { from: "Mama", text: "Don’t scream. But yes. Today is yours. Whole world, on pause, for you." },
     { from: "Papa", text: "I hid a surprise in the house. Also I will always cut the first slice crooked on purpose." },
