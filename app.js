@@ -9,6 +9,7 @@ let cutting = false;
 let cutStart = null;
 let audio;
 let nameStars = [];
+let nightUnlocked = false;
 const SEAL_KEY = "birthday-gift-sealed";
 
 document.getElementById("house-title").textContent = `${name}'s birthday house`;
@@ -82,6 +83,21 @@ function isSealed() {
   return document.getElementById("intro").classList.contains("is-closed") || localStorage.getItem(SEAL_KEY) === "1";
 }
 
+function isFinished() {
+  return localStorage.getItem(SEAL_KEY) === "1";
+}
+
+function lockCake() {
+  const btn = document.querySelector('[data-room="cake"]');
+  btn.disabled = true;
+  btn.classList.add("is-locked");
+  btn.querySelector("em").textContent = "already celebrated";
+  document.querySelector(".house__header .lede").textContent =
+    "the cake already had its moment. the other rooms are still open.";
+  document.getElementById("night-room").hidden = true;
+  document.getElementById("night-room").classList.add("hidden");
+}
+
 function sealGift() {
   const intro = document.getElementById("intro");
   const gift = document.querySelector(".gift");
@@ -114,8 +130,9 @@ document.getElementById("tuck").addEventListener("click", tuckTheDay);
 
 document.querySelectorAll("[data-room]").forEach((btn) => {
   btn.addEventListener("click", () => {
-    tone(392, 0.1);
     const room = btn.dataset.room;
+    if (room === "cake" && isFinished()) return;
+    tone(392, 0.1);
     show(room);
     if (room === "messages") playMessages();
     if (room === "cake") resetCake();
@@ -369,7 +386,8 @@ function drawConstellation() {
 
 function tuckTheDay() {
   sealGift();
-  show("intro");
+  lockCake();
+  show("house");
 }
 
 function spawnPieces() {
@@ -571,4 +589,8 @@ tick();
 renderFame();
 renderWall();
 makeCandles();
-if (localStorage.getItem(SEAL_KEY) === "1") sealGift();
+if (isFinished()) {
+  sealGift();
+  lockCake();
+  show("house");
+}

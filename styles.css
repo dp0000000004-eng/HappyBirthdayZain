@@ -184,6 +184,13 @@ h1,
   font-size: 0.9rem;
 }
 
+.rooms button.is-locked,
+.rooms button:disabled {
+  opacity: 0.42;
+  cursor: not-allowed;
+  filter: grayscale(0.35);
+}
+
 .rooms__finale {
   background: var(--ink);
   color: var(--cream);
