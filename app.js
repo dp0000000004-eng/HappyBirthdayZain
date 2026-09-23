@@ -15,6 +15,10 @@ const SEAL_KEY = "birthday-gift-sealed";
 document.getElementById("house-title").textContent = `${name}'s birthday house`;
 document.title = `A surprise for ${name}`;
 
+const SCENES = ["intro", "house", "messages", "fame", "gallery", "cake", "sky"];
+let currentScene = "intro";
+history.scrollRestoration = "manual";
+
 function show(id) {
   document.querySelectorAll(".scene").forEach((scene) => {
     const on = scene.id === id;
@@ -22,6 +26,64 @@ function show(id) {
     scene.classList.toggle("hidden", !on);
   });
 }
+
+function hashScene() {
+  const id = location.hash.replace(/^#/, "");
+  return SCENES.includes(id) ? id : "";
+}
+
+function applyScene(id) {
+  if (!SCENES.includes(id)) id = "intro";
+  if (isFinished() && id === "intro") id = "house";
+  currentScene = id;
+  show(id);
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox.open) lightbox.close();
+}
+
+function enterRoom(id) {
+  if (id === "messages") playMessages();
+  if (id === "cake") resetCake();
+  if (id === "sky") resetSky();
+}
+
+function go(id, { replace = false, effects = false } = {}) {
+  applyScene(id);
+  if (effects) enterRoom(id);
+  const state = { scene: id };
+  const url = `#${id}`;
+  if (replace || history.state?.scene === id) history.replaceState(state, "", url);
+  else history.pushState(state, "", url);
+}
+
+function goHome() {
+  if (history.state?.scene && history.state.scene !== "house" && history.state.scene !== "intro") {
+    history.back();
+    return;
+  }
+  go("house", { replace: true });
+}
+
+window.addEventListener("popstate", (event) => {
+  const lightbox = document.getElementById("lightbox");
+  if (lightbox.open) {
+    lightbox.close();
+    history.pushState({ scene: currentScene }, "", `#${currentScene}`);
+    return;
+  }
+
+  const scene = event.state?.scene;
+  const stayInHouse = currentScene !== "intro" || isFinished();
+  if (!scene || scene === "intro") {
+    if (stayInHouse) {
+      history.pushState({ scene: "house" }, "", "#house");
+      applyScene("house");
+      return;
+    }
+    if (!scene) return;
+  }
+  applyScene(scene);
+});
 
 function tone(freq, time = 0.12, type = "sine", gain = 0.04) {
   audio ??= new AudioContext();
@@ -87,15 +149,11 @@ function isFinished() {
   return localStorage.getItem(SEAL_KEY) === "1";
 }
 
-function lockCake() {
+function unlockCake() {
   const btn = document.querySelector('[data-room="cake"]');
-  btn.disabled = true;
-  btn.classList.add("is-locked");
-  btn.querySelector("em").textContent = "already celebrated";
-  document.querySelector(".house__header .lede").textContent =
-    "the cake already had its moment. the other rooms are still open.";
-  document.getElementById("night-room").hidden = true;
-  document.getElementById("night-room").classList.add("hidden");
+  btn.disabled = false;
+  btn.classList.remove("is-locked");
+  btn.querySelector("em").textContent = "wish · blow · cut";
 }
 
 function sealGift() {
@@ -113,7 +171,7 @@ function openHouse() {
   if (isSealed()) return;
   tone(523, 0.18);
   burst(window.innerWidth / 2, window.innerHeight / 2, 40);
-  show("house");
+  go("house");
 }
 
 document.querySelector(".gift").addEventListener("click", (event) => {
@@ -122,8 +180,7 @@ document.querySelector(".gift").addEventListener("click", (event) => {
 });
 document.getElementById("intro").addEventListener("click", openHouse);
 document.getElementById("night-btn").addEventListener("click", () => {
-  show("sky");
-  resetSky();
+  go("sky", { effects: true });
 });
 document.getElementById("release").addEventListener("click", sendLanterns);
 document.getElementById("tuck").addEventListener("click", tuckTheDay);
@@ -131,17 +188,13 @@ document.getElementById("tuck").addEventListener("click", tuckTheDay);
 document.querySelectorAll("[data-room]").forEach((btn) => {
   btn.addEventListener("click", () => {
     const room = btn.dataset.room;
-    if (room === "cake" && isFinished()) return;
     tone(392, 0.1);
-    show(room);
-    if (room === "messages") playMessages();
-    if (room === "cake") resetCake();
-    if (room === "sky") resetSky();
+    go(room, { effects: true });
   });
 });
 
 document.querySelectorAll("[data-back]").forEach((btn) => {
-  btn.addEventListener("click", () => show("house"));
+  btn.addEventListener("click", goHome);
 });
 
 function playMessages() {
@@ -175,9 +228,10 @@ function renderFame() {
   root.innerHTML = "";
   fame.forEach((item, index) => {
     const el = document.createElement("article");
+    const src = item.src || item.image;
     el.className = "frame";
     el.style.setProperty("--tilt", `${index % 2 ? 1.6 : -1.8}deg`);
-    el.innerHTML = `<strong>${item.title}</strong><span>${item.note}</span>`;
+    el.innerHTML = `${src ? `<div class="frame__shot" style="background-image:url('${src}')"></div>` : ""}<strong>${item.title}</strong><span>${item.note}</span>`;
     root.append(el);
   });
 }
@@ -386,8 +440,7 @@ function drawConstellation() {
 
 function tuckTheDay() {
   sealGift();
-  lockCake();
-  show("house");
+  go("house", { replace: true });
 }
 
 function spawnPieces() {
@@ -589,8 +642,20 @@ tick();
 renderFame();
 renderWall();
 makeCandles();
-if (isFinished()) {
-  sealGift();
-  lockCake();
-  show("house");
+unlockCake();
+{
+  const start = hashScene() || (isFinished() ? "house" : "intro");
+  if (isFinished()) sealGift();
+  if (start === "intro") {
+    history.replaceState({ scene: "intro" }, "", "#intro");
+    applyScene("intro");
+  } else if (start === "house") {
+    history.replaceState({ scene: "house" }, "", "#house");
+    applyScene("house");
+  } else {
+    history.replaceState({ scene: "house" }, "", "#house");
+    history.pushState({ scene: start }, "", `#${start}`);
+    applyScene(start);
+    enterRoom(start);
+  }
 }
