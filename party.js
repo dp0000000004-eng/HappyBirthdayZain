@@ -25,7 +25,8 @@ May your life always be as precious, pure, and beautiful as your innocent little
     {from:"Atif mamu", text:"Happy Birthday, superstar! May you grow up strong, wise, kind, and full of confidence. May your beautiful dreams come true and your days be filled with smiles! 🌟🎉"},
     {from:"Gulzar", text:"Wishing the cutest birthday boy a lifetime of blessings, bright sunshine, loving family, and exciting adventures. Keep spreading your happiness everywhere you go! 🎂☀️💖"},
     {from:"Sweetie", text:"Happy Birthday, darling Zain! May your tiny hands always be held with love, your heart stay joyful, and your life be as sweet and wonderful as you are. 🥰🎈✨"},
-    {from:"deba", text:"Happy Birthday zain"},
+    {from:"Ashab", text:"Happy Birthday zain, big things starts from small. your day filled with loves ❤️🤲✨️"},
+     {from:"Hafsa", text:"Wishing you the loveliest, cutest birthday, there are many to come, and old one became memories, your day files with blessings and only positivity✨️🎀🎉"}
   ],
   fame: [
     
